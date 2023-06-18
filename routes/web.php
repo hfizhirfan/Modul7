@@ -24,4 +24,7 @@ Route::get('home', [HomeController::class, 'index'])->name('home');
 Route::get('profile', ProfileController::class)->name('profile');
 
 Route::resource('employees', EmployeeController::class);
+<<<<<<< HEAD
+=======
 
+>>>>>>> 9c41e1c43f8fd811c53681ae6e3ea3ad0a32ff3c
