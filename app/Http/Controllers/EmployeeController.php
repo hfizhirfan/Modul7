@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,8 +13,6 @@ class EmployeeController extends Controller
 
     public function index()
     {
-    
-
     }
 
 
@@ -25,7 +24,6 @@ class EmployeeController extends Controller
         $positions = Position::all();
 
         return view('employee.create', compact('pageTitle', 'positions'));
-
     }
 
 
@@ -49,7 +47,7 @@ class EmployeeController extends Controller
         }
 
         // Eloquent
-        $employee = New Employee;
+        $employee = new Employee;
         $employee->firstname = $request->firstName;
         $employee->lastname = $request->lastName;
         $employee->email = $request->email;
@@ -63,20 +61,23 @@ class EmployeeController extends Controller
 
     public function show(string $id)
     {
-        
+        $pageTitle = 'Employee Detail';
 
+        // ELOQUENT
+        $employee = Employee::find($id);
+
+        return view('employee.show', compact('pageTitle', 'employee'));
     }
 
     public function edit(string $id)
     {
         $pageTitle = 'Edit Employee';
-        
+
         //Eloquent
         $positions = Position::all();
         $employee = Employee::find($id);
 
         return view('employee.edit', compact('pageTitle', 'positions', 'employee'));
-    
     }
 
 
@@ -87,18 +88,18 @@ class EmployeeController extends Controller
             'email' => 'Isi :attribute dengan format yang benar',
             'numeric' => 'Isi :attribute dengan angka'
         ];
-    
+
         $validator = Validator::make($request->all(), [
             'firstName' => 'required',
             'lastName' => 'required',
             'email' => 'required|email',
             'age' => 'required|numeric',
         ], $messages);
-    
+
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-    
+
         // ELOQUENT
         $employee = Employee::find($id);
         $employee->firstname = $request->firstName;
@@ -107,15 +108,16 @@ class EmployeeController extends Controller
         $employee->age = $request->age;
         $employee->position_id = $request->position;
         $employee->save();
-    
+
         return redirect()->route('employees.index');
-    
     }
 
-  
+
     public function destroy(string $id)
     {
-    
+        // ELOQUENT
+        Employee::find($id)->delete();
 
+        return redirect()->route('employees.index');
     }
 }
